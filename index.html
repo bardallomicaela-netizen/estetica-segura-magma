@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estética Segura | Simulador Magma</title>
+<style>
+:root{--ink:#20302d;--muted:#64716d;--green:#244b40;--mint:#e8f1eb;--cream:#f7f7f2;--line:#dce4de;--white:#fff;--amber:#fff3d7;--red:#f9e8e6}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--cream);color:var(--ink);line-height:1.5}
+header{background:var(--green);color:white;padding:28px 18px 30px}.wrap{max-width:850px;margin:auto}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.76rem;color:#c8dfd0;font-weight:700}.hero h1{font-size:clamp(2rem,7vw,3rem);line-height:1.05;margin:10px 0}.hero p{max-width:650px;color:#e4eee8;margin:0}
+main{padding:22px 16px 50px}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 16px;box-shadow:0 5px 18px #18372b0a}.panel h2{margin:0 0 8px;font-size:1.2rem}.muted{color:var(--muted);font-size:.94rem}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.chip{background:var(--mint);color:var(--green);padding:5px 10px;border-radius:999px;font-size:.8rem;font-weight:650}
+label{display:block;font-weight:650;margin:12px 0 6px}select,textarea,input{width:100%;font:inherit;border:1px solid #cbd7cf;border-radius:10px;padding:11px 12px;background:white;color:var(--ink)}textarea{min-height:95px;resize:vertical}
+button{border:0;border-radius:11px;background:var(--green);color:white;font:inherit;font-weight:700;padding:12px 16px;cursor:pointer}button.secondary{background:var(--mint);color:var(--green);border:1px solid var(--line)}button:focus,select:focus,textarea:focus{outline:3px solid #9cc8b2;outline-offset:2px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.patient{background:#f1f6f2;border-radius:13px;padding:15px;margin-top:14px}.patient strong{display:block;margin-bottom:5px}.hidden{display:none!important}.result{border-left:4px solid var(--green);padding:12px 15px;background:#f3f7f3;border-radius:0 12px 12px 0;margin-top:14px}.warning{background:var(--amber);padding:12px 14px;border-radius:12px;margin-top:12px;font-size:.92rem}.danger{background:var(--red)}details{border-top:1px solid var(--line);padding:12px 0}summary{font-weight:700;cursor:pointer}.small{font-size:.84rem;color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:.82rem;padding:20px}
+</style>
+</head>
+<body>
+<header><div class="wrap hero"><div class="eyebrow">Prototipo educativo · Cosmiatría y Cosmetología</div><h1>Estética Segura</h1><p>Simulador de entrevistas previas a radiofrecuencia tripolar Magma. Practicá qué preguntar, evaluá la información y fundamentá tu decisión con el manual.</p><div class="chips"><span class="chip">Casos ficticios</span><span class="chip">Sin cuenta</span><span class="chip">Sin costo de API</span></div></div></header>
+<main class="wrap">
+<section class="panel">
+<h2>1. Elegí una paciente</h2><p class="muted">Cada caso tiene un dato relevante que debés descubrir con preguntas. Esta versión usa respuestas predefinidas; no es un chat de IA en tiempo real.</p>
+<label for="caseSelect">Caso de práctica</label>
+<select id="caseSelect">
+<option value="0">Caso 1 · Consulta facial</option>
+<option value="1">Caso 2 · Tratamiento corporal</option>
+<option value="2">Caso 3 · Consulta por una zona del cuello</option>
+<option value="3">Caso 4 · Antecedente médico</option>
+<option value="4">Caso 5 · Zona con sensibilidad alterada</option>
+</select>
+<label for="goalSelect">Objetivo de la consulta</label>
+<select id="goalSelect"><option>Rejuvenecimiento facial</option><option>Flacidez corporal</option><option>Adiposidad localizada</option><option>Mejorar el aspecto de la piel</option></select>
+<div class="actions"><button id="startBtn">Iniciar entrevista</button><button class="secondary" id="resetBtn">Reiniciar</button></div>
+<div id="patientArea" class="patient hidden" aria-live="polite"></div>
+</section>
+<section class="panel" id="interviewPanel">
+<h2>2. Entrevistá a la paciente</h2><p class="muted">Elegí una pregunta y leé la respuesta. Podés hacer varias preguntas antes de tomar una decisión.</p>
+<label for="questionSelect">Pregunta para realizar</label>
+<select id="questionSelect">
+<option value="objetivo">¿Qué zona querés tratar y cuál es tu objetivo?</option>
+<option value="salud">¿Tenés alguna enfermedad o antecedente médico relevante?</option>
+<option value="medicacion">¿Tomás medicamentos actualmente?</option>
+<option value="implantes">¿Tenés marcapasos, prótesis metálicas u otros implantes?</option>
+<option value="embarazo">¿Estás embarazada o en período de lactancia?</option>
+<option value="sensibilidad">¿Tenés cambios de sensibilidad en la zona?</option>
+<option value="piel">¿Hay inflamación, infección o alguna lesión en la zona?</option>
+<option value="neurologico">¿Tenés epilepsia, Parkinson o alguna cardiopatía?</option>
+<option value="vascular">¿Tenés flebitis o trombosis venosa?</option>
+<option value="zona">¿La zona que querés tratar incluye el ojo o la parte anterior del cuello?</option>
+</select>
+<div class="actions"><button id="askBtn">Hacer pregunta</button></div>
+<div id="answers" aria-live="polite"></div>
+</section>
+<section class="panel">
+<h2>3. Registrá tu decisión</h2><p class="muted">No elijas por intuición. Revisá las respuestas y contrastalas con el manual del equipo.</p>
+<label for="decision">¿Qué harías?</label>
+<select id="decision"><option value="">Seleccioná una opción</option><option value="realizar">Realizar</option><option value="adaptar">Adaptar</option><option value="derivar">No realizar y derivar / consultar antes de proceder</option></select>
+<label for="reason">Justificación breve</label>
+<textarea id="reason" placeholder="¿Qué información fue clave? ¿Qué sección del manual respalda tu decisión?"></textarea>
+<div class="actions"><button id="finishBtn">Ver devolución</button></div>
+<div id="feedback" class="hidden" aria-live="polite"></div>
+</section>
+<section class="panel">
+<h2>Referencias del manual</h2>
+<details><summary>Contraindicaciones · Sección 1.8, página impresa 9</summary><p>El manual enumera: marcapasos; prótesis metálicas; tratamiento anticoagulante; epilepsia; embarazo y lactancia; cardiopatías; Parkinson; cáncer y tumores; áreas de anestesia o hiposensibilidad; sobre el ojo; procesos inflamatorios; procesos infecciosos; flebitis y trombosis venosa.</p></details>
+<details><summary>Condiciones de seguridad · Sección 3, páginas impresas 11–13</summary><p>El manual advierte sobre riesgo de quemaduras por energía excesiva o por mantener el aplicador detenido en un punto (página 12), indica mantener los cabezales en movimiento (página 12), no tratar la parte anterior del cuello (página 13) y usar siempre un medio de conducción (página 13).</p></details>
+<div class="warning"><strong>Importante:</strong> herramienta educativa, no diagnóstico ni autorización para tratar personas reales. Los casos y las respuestas son ficticios y simplificados. Si falta información, existe una duda clínica o una condición no contemplada, no se debe asumir que el tratamiento es seguro; corresponde consultar al profesional de salud pertinente y seguir el manual completo.</div>
+</section>
+</main>
+<footer>Prototipo inicial de práctica · Basado en el Manual de usuario del Equipo de Radiofrecuencia Tripolar Magma, versión 00.</footer>
+<script>
+const cases=[
+{intro:"Paciente ficticia de 42 años que consulta por rejuvenecimiento facial. Te cuenta que quiere mejorar el aspecto de la piel.",answers:{objetivo:"Quiero tratar las mejillas por motivos estéticos.",salud:"No tengo enfermedades que conozca.",medicacion:"No tomo medicamentos.",implantes:"No tengo marcapasos ni prótesis metálicas.",embarazo:"No estoy embarazada ni amamantando.",sensibilidad:"Siento normalmente el tacto en esa zona.",piel:"No tengo inflamación, infección ni lesiones actualmente.",neurologico:"No tengo epilepsia, Parkinson ni cardiopatías.",vascular:"No tengo flebitis ni trombosis venosa.",zona:"No quiero tratar el ojo ni la parte anterior del cuello."},correct:"realizar",why:"Con las respuestas ficticias disponibles no aparece una contraindicación de la lista consultada. Antes de cualquier procedimiento real, se debe completar la evaluación y cumplir todas las instrucciones del manual.",ref:"Sección 1.8, página 9; sección 3, páginas 11–13."},
+{intro:"Paciente ficticia que solicita radiofrecuencia corporal en abdomen para mejorar la flacidez.",answers:{objetivo:"Quiero tratar el abdomen.",salud:"Tengo una condición médica, pero no sé si importa.",medicacion:"Tomo un anticoagulante recetado por mi médica.",implantes:"No tengo marcapasos ni prótesis metálicas.",embarazo:"No estoy embarazada ni amamantando.",sensibilidad:"La sensibilidad de la zona parece normal.",piel:"No tengo lesiones ni infección.",neurologico:"No tengo epilepsia, Parkinson ni cardiopatías.",vascular:"No me diagnosticaron flebitis ni trombosis.",zona:"No incluye el ojo ni la parte anterior del cuello."},correct:"derivar",why:"El manual incluye a pacientes en tratamiento anticoagulante entre las contraindicaciones. No realizar el procedimiento; corresponde consultar/derivar al profesional de salud pertinente.",ref:"Sección 1.8, página 9."},
+{intro:"Paciente ficticia que pide tratar la parte delantera del cuello porque le preocupa la flacidez.",answers:{objetivo:"Quiero tratar la parte anterior del cuello.",salud:"No tengo enfermedades conocidas.",medicacion:"No tomo medicamentos.",implantes:"No tengo marcapasos ni prótesis metálicas.",embarazo:"No estoy embarazada ni amamantando.",sensibilidad:"La sensibilidad es normal.",piel:"No tengo lesiones ni infecciones.",neurologico:"No tengo epilepsia, Parkinson ni cardiopatías.",vascular:"No tengo flebitis ni trombosis.",zona:"Sí, quiero tratar justo la parte delantera del cuello."},correct:"adaptar",why:"La sección de seguridad indica que no se debe tratar la parte anterior del cuello. No se debe aplicar en esa zona; cualquier alternativa debe estar dentro del uso previsto y ser evaluada conforme al manual.",ref:"Sección 3, página 13."},
+{intro:"Paciente ficticia que consulta por un tratamiento facial. Durante la entrevista menciona un antecedente importante.",answers:{objetivo:"Quiero tratar las mejillas.",salud:"Tengo un marcapasos.",medicacion:"Tomo medicación indicada por mi médica.",implantes:"Sí, tengo un marcapasos.",embarazo:"No estoy embarazada ni amamantando.",sensibilidad:"La sensibilidad es normal.",piel:"No tengo lesiones ni infección.",neurologico:"No tengo epilepsia, Parkinson ni cardiopatías conocidas.",vascular:"No tengo flebitis ni trombosis.",zona:"No incluye el ojo ni la parte anterior del cuello."},correct:"derivar",why:"El manual enumera a pacientes portadores de marcapasos entre las contraindicaciones. No realizar la radiofrecuencia y consultar/derivar al profesional de salud pertinente.",ref:"Sección 1.8, página 9."},
+{intro:"Paciente ficticia que desea radiofrecuencia en una zona corporal, pero refiere que allí siente menos el tacto.",answers:{objetivo:"Quiero tratar el muslo.",salud:"No tengo enfermedades conocidas.",medicacion:"No tomo medicamentos.",implantes:"No tengo marcapasos ni prótesis metálicas.",embarazo:"No estoy embarazada ni amamantando.",sensibilidad:"En esa zona siento menos el tacto que en el resto del cuerpo.",piel:"No tengo infección ni inflamación visible.",neurologico:"No tengo epilepsia, Parkinson ni cardiopatías.",vascular:"No tengo flebitis ni trombosis.",zona:"No incluye el ojo ni la parte anterior del cuello."},correct:"derivar",why:"El manual contraindica la aplicación en áreas de anestesia o hiposensibilidad. No tratar esa zona y consultar si se requiere evaluación adicional.",ref:"Sección 1.8, página 9."}
+];
+const qs={objetivo:"¿Qué zona querés tratar y cuál es tu objetivo?",salud:"¿Tenés alguna enfermedad o antecedente médico relevante?",medicacion:"¿Tomás medicamentos actualmente?",implantes:"¿Tenés marcapasos, prótesis metálicas u otros implantes?",embarazo:"¿Estás embarazada o en período de lactancia?",sensibilidad:"¿Tenés cambios de sensibilidad en la zona?",piel:"¿Hay inflamación, infección o alguna lesión en la zona?",neurologico:"¿Tenés epilepsia, Parkinson o alguna cardiopatía?",vascular:"¿Tenés flebitis o trombosis venosa?",zona:"¿La zona que querés tratar incluye el ojo o la parte anterior del cuello?"};
+let current=null,asked=new Set();
+const $=id=>document.getElementById(id);
+function start(){current=cases[Number($("caseSelect").value)];asked=new Set();$("answers").innerHTML="";$("feedback").classList.add("hidden");$("decision").value="";$("reason").value="";$("patientArea").classList.remove("hidden");$("patientArea").innerHTML="<strong>Paciente</strong>"+current.intro+"<p class='small'>Hacé las preguntas que consideres necesarias. No todas las preguntas son obligatorias, pero una entrevista incompleta puede llevar a una decisión incorrecta.</p>";}
+$("startBtn").addEventListener("click",start);
+$("resetBtn").addEventListener("click",()=>{current=null;asked=new Set();$("patientArea").classList.add("hidden");$("answers").innerHTML="";$("feedback").classList.add("hidden");$("decision").value="";$("reason").value="";});
+$("askBtn").addEventListener("click",()=>{if(!current)start();const key=$("questionSelect").value;if(asked.has(key)){const note=document.createElement("div");note.className="result";note.textContent="Ya hiciste esta pregunta. Probá otra para reunir más información."; $("answers").append(note);return;}asked.add(key);const el=document.createElement("div");el.className="result";const strong=document.createElement("strong");strong.textContent=qs[key];const p=document.createElement("p");p.textContent=current.answers[key];el.append(strong,p);$("answers").append(el);});
+$("finishBtn").addEventListener("click",()=>{if(!current)start();const chosen=$("decision").value;const feedback=$("feedback");feedback.classList.remove("hidden");let verdict=chosen===current.correct;let label={realizar:"Realizar",adaptar:"Adaptar",derivar:"No realizar y derivar / consultar"}[current.correct];feedback.innerHTML="";const head=document.createElement("div");head.className="result"+(verdict?"":" danger");const strong=document.createElement("strong");strong.textContent=verdict?"Coincide con la decisión prevista para este caso.":"Revisá tu decisión: no coincide con la prevista para este caso.";const p=document.createElement("p");p.textContent="Decisión prevista: "+label+".";const why=document.createElement("p");why.textContent=current.why;const ref=document.createElement("p");ref.className="small";ref.textContent="Referencia: "+current.ref;head.append(strong,p,why,ref);feedback.append(head);const askedText=document.createElement("p");askedText.className="muted";askedText.textContent="Preguntas realizadas: "+asked.size+" de "+Object.keys(qs).length+". Este recuento no reemplaza la evaluación de la calidad de la entrevista.";feedback.append(askedText);if(!$("reason").value.trim()){const hint=document.createElement("div");hint.className="warning";hint.textContent="Completá tu justificación para practicar cómo fundamentar una decisión con el manual.";feedback.append(hint);}});
+</script>
+</body>
+</html>
